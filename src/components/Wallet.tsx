@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Animated, FlatList } from "react-native";
+import { Animated, FlatList, RefreshControl } from "react-native";
 import WalletCard from "./WalletCard";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -14,7 +14,7 @@ const useLazyRef = <T extends object>(initializer: () => T) => {
 };
 
 
-export default ({ data }: any) => {
+export default ({ data, isLoading, refresh }: any) => {
     const y = useLazyRef(() => new Animated.Value(0));
     const onScroll = useLazyRef(() =>
         Animated.event(
@@ -31,15 +31,20 @@ export default ({ data }: any) => {
 
     return (
         <AnimatedFlatList
-            {...{ onScroll, data }}
-            style={{ paddingHorizontal: '5%' }}
             // bounces={false}
+            style={{ paddingHorizontal: '5%' }}
             contentContainerStyle={{ paddingBottom: 400, }}
             scrollEventThrottle={16}
+            keyExtractor={(item) => `${item.id}`}
+            {...{ onScroll, data }}
             renderItem={({ index, item }) => (
                 <WalletCard {...{ index, y, item }} />
             )}
-            keyExtractor={(item) => `${item.id}`}
+            refreshControl={
+                <RefreshControl
+                    refreshing={isLoading}
+                    onRefresh={refresh} />
+            }
         />
     );
 };

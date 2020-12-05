@@ -8,7 +8,7 @@ import Wallet from '../components/Wallet'
 
 export default (props: any) => {
     // use hooks for simply fetch data
-    const { data, isLoading } = useFetch('/frontend-test')
+    const { data, isLoading, refresh } = useFetch('/frontend-test')
     const [query, setQuery] = useState('')
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -38,8 +38,8 @@ export default (props: any) => {
     return (
         <>
             <Modal {...{ modalVisible, setModalVisible, setFilter, filter }} />
-            <Search {...{ setQuery, query, setModalVisible }} />
-            <Wallet data={finalResult} />
+            <Search {...{ setQuery, query, setModalVisible, isLoading }} />
+            <Wallet data={finalResult} {...{ isLoading, refresh }} />
         </>
     )
 }
